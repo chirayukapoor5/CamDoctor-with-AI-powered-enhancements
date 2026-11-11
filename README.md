@@ -32,8 +32,10 @@ and heuristics, not definitive diagnoses. Camera frames are not uploaded to Groq
 ### Browser experience
 
 The separate `web/` app is a recruiter-friendly browser demo built with React,
-TypeScript, Fluent UI, Canvas, and Vite. It requests camera permission only
-after the user starts the experience. It supports local photo capture and
+TypeScript, Fluent UI, Canvas, and Vite. Visitors can select **Try sample scene**
+to experience filters with a generated local image and no webcam permission or
+Groq key. Real camera permission is requested only when a visitor explicitly
+starts the webcam. It supports local photo capture and
 effects, Undo/Reset, and an optional Groq Camera Director using Bring Your Own
 Key (BYOK). The key is held in page memory and forwarded through same-origin
 server handlers; prompts and validated tool proposals are sent to Groq, but
@@ -67,7 +69,7 @@ npm run dev
 Open the local URL printed by Vite. For local API-handler development, the Vite
 configuration wires `/api/*` to the same handlers used by Vercel.
 
-Run its automated checks:
+Run its automated checks (also configured in `.github/workflows/web-ci.yml`):
 
 ```powershell
 npm test
