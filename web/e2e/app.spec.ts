@@ -104,3 +104,52 @@ test("reports Groq authentication failure without persisting or displaying a key
   await keyField.fill("");
   expect(await keyField.inputValue()).toBe("");
 });
+
+
+test("recruiters can try generated sample filters and export without camera permission or Groq", async ({ page }) => {
+  await page.addInitScript(() => {
+    let calls = 0;
+    Object.defineProperty(globalThis, "__sampleMediaCalls", { get: () => calls });
+    Object.defineProperty(navigator.mediaDevices, "getUserMedia", {
+      configurable: true,
+      value: async () => {
+        calls += 1;
+        throw new Error("Sample mode must not access a real camera");
+      },
+    });
+  });
+
+  const apiRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/api/")) apiRequests.push(request.url());
+  });
+
+  await page.goto("/");
+  await page.getByRole("button", { name: "Try sample scene" }).click();
+  await expect(page.getByText("SAMPLE · GENERATED")).toBeVisible();
+  await expect(page.getByText(/Generated sample scene/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Download sample" })).toBeVisible();
+
+  const checkbox = page.getByRole("checkbox", { name: "Black & white" });
+  await checkbox.check();
+  await expect.poll(async () => {
+    return page.locator(".preview-stage canvas").evaluate((element) => {
+      const canvas = element as HTMLCanvasElement;
+      const pixels = canvas.getContext("2d")?.getImageData(100, 140, 1, 1).data;
+      if (!pixels) return false;
+      return Math.max(pixels[0], pixels[1], pixels[2])
+        - Math.min(pixels[0], pixels[1], pixels[2]) <= 1;
+    });
+  }).toBe(true);
+
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download sample" }).click();
+  expect((await download).suggestedFilename()).toBe("camdoctor-photo.png");
+  await page.getByRole("button", { name: "Undo" }).click();
+  await expect(checkbox).not.toBeChecked();
+
+  const calls = await page.evaluate(() =>
+    (globalThis as typeof globalThis & { __sampleMediaCalls: number }).__sampleMediaCalls);
+  expect(calls).toBe(0);
+  expect(apiRequests).toEqual([]);
+});
