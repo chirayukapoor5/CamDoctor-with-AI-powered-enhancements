@@ -28,17 +28,17 @@ export function createSampleScene(): HTMLCanvasElement {
   ctx.arc(735, 158, 50, 0, Math.PI * 2);
   ctx.fill();
 
-  function mountain(points: number[], color: string) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.moveTo(points[0], points[1]);
-    for (let i = 2; i < points.length; i += 2) ctx.lineTo(points[i], points[i + 1]);
-    ctx.closePath();
-    ctx.fill();
+  function mountain(context: CanvasRenderingContext2D, points: number[], color: string) {
+    context.fillStyle = color;
+    context.beginPath();
+    context.moveTo(points[0], points[1]);
+    for (let i = 2; i < points.length; i += 2) context.lineTo(points[i], points[i + 1]);
+    context.closePath();
+    context.fill();
   }
-  mountain([0, 355, 95, 235, 205, 345, 315, 198, 440, 344, 600, 240, 760, 355, 960, 270, 960, 540, 0, 540], "#48647c");
-  mountain([0, 425, 165, 328, 310, 414, 500, 295, 700, 405, 840, 310, 960, 390, 960, 540, 0, 540], "#244c5b");
-  mountain([0, 483, 195, 432, 405, 475, 620, 396, 780, 470, 960, 408, 960, 540, 0, 540], "#18333f");
+  mountain(ctx, [0, 355, 95, 235, 205, 345, 315, 198, 440, 344, 600, 240, 760, 355, 960, 270, 960, 540, 0, 540], "#48647c");
+  mountain(ctx, [0, 425, 165, 328, 310, 414, 500, 295, 700, 405, 840, 310, 960, 390, 960, 540, 0, 540], "#244c5b");
+  mountain(ctx, [0, 483, 195, 432, 405, 475, 620, 396, 780, 470, 960, 408, 960, 540, 0, 540], "#18333f");
 
   // Color patches help visually verify saturation, grayscale and warmth.
   const patches = ["#df5657", "#eebd60", "#55b7a4", "#627ed3", "#e7dae2"];
