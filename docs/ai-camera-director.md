@@ -41,9 +41,7 @@ selected model's tool-calling workflow before marking the account connected.
 - Request context contains text, capability metadata, setting values, and numeric
   image-quality results only. **No camera pixels, image files, or photos are sent.**
 - The key is entered in **Settings → AI Provider → Groq** and stored only in
-  Windows Credential Manager on Windows, or QtKeychain using the platform's
-  protected credential backend on macOS/Linux. QtKeychain is required to build on
-  non-Windows platforms; insecure fallback storage is explicitly disabled.
+  Windows Credential Manager. Native desktop builds currently target Windows.
 - The production credential is stored with service `CamDoctor` and account
   `groq-api-key`.
 - Credentials are read from the OS vault only when testing or sending a request.

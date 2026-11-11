@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Target native CMake builds, continuous integration, and packaged releases at
+  Windows x64.
 - Add Groq account settings with OS-protected credential storage, authenticated
   connection/model tool-support verification, model refresh, and explicit key removal.
   AI Camera Director requests now retrieve credentials from the vault on demand;

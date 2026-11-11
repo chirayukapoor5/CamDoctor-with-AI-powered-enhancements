@@ -25,9 +25,9 @@ the browser's camera APIs and does not replace the native camera backend.
 - Groq credentials are kept in OS-protected storage. No API key belongs in
   `.env`, source code, or project settings.
 
-Camera control availability depends on the operating system, camera, and driver.
-Image-quality observations are measurements and heuristics, not definitive
-diagnoses. Camera frames are not uploaded to Groq.
+The native application targets Windows; camera control availability depends on
+the connected camera and its driver. Image-quality observations are measurements
+and heuristics, not definitive diagnoses. Camera frames are not uploaded to Groq.
 
 ### Browser experience
 
@@ -81,14 +81,13 @@ The browser app can be deployed on Vercel's free Hobby plan. Import this
 repository, set the project root to `web`, and use the included Vercel
 configuration so the `/api` handlers are deployed with the frontend. Add no
 Groq secret to deployment settings; users bring their own key in the browser.
-The deployment URL is not listed here until a persistent deployment is
-successfully published.
+The current public preview is linked at the top of this README.
 
 ## Build the native application
 
-Requirements: CMake 3.24+, a C++20 compiler, and Qt 6.5+ with Core, Gui,
-Widgets, Multimedia, Concurrent, and Network. Windows builds require Visual
-Studio 2022 with the Desktop C++ workload.
+Native desktop builds target Windows only. Requirements: Windows 10 or later,
+CMake 3.24+, Visual Studio 2022 with the Desktop C++ workload, and Qt 6.5+ with
+Core, Gui, Widgets, Multimedia, Concurrent, and Network.
 
 ```powershell
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64 `
@@ -96,10 +95,6 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A x64 `
 cmake --build build --config Release
 ctest --test-dir build -C Release --output-on-failure
 ```
-
-On macOS and Linux, install the Qt 6 development packages and QtKeychain, then
-configure CMake with the Qt installation path. Linux camera access uses V4L2;
-camera controls and features still vary by device and driver.
 
 ## Groq setup
 
