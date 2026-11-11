@@ -30,6 +30,7 @@ import {
   VideoRegular,
 } from "@fluentui/react-icons";
 import { processImageData } from "./imageEffects";
+import { createSampleScene } from "./sampleScene";
 import {
   DEFAULT_EFFECTS,
   GROQ_MODELS,
@@ -70,6 +71,7 @@ function App() {
   const [cameraMessage, setCameraMessage] = useState("Your camera stays in this browser.");
   const [effects, setEffects] = useState<ImageEffects>(DEFAULT_EFFECTS);
   const [captured, setCaptured] = useState(false);
+  const [sampleMode, setSampleMode] = useState(false);
   const [hasFrame, setHasFrame] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [showKey, setShowKey] = useState(false);
@@ -108,6 +110,18 @@ function App() {
     setEffects(next);
   }, [effects]);
 
+  const startSample = useCallback(() => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
+    capturedFrameRef.current = createSampleScene();
+    setCaptured(false);
+    setSampleMode(true);
+    setHasFrame(false);
+    setCameraState("idle");
+    setCameraMessage("Generated sample scene. No camera permission or image upload required.");
+  }, []);
+
   const startCamera = useCallback(async () => {
     if (!navigator.mediaDevices?.getUserMedia) {
       setCameraState("unsupported");
@@ -129,6 +143,7 @@ function App() {
       }
       capturedFrameRef.current = null;
       setCaptured(false);
+      setSampleMode(false);
       setHasFrame(false);
       setCameraState("active");
       setCameraMessage("Camera is on. Preview and effects are processed locally.");
@@ -146,6 +161,7 @@ function App() {
     capturedFrameRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
     setCaptured(false);
+    setSampleMode(false);
     setHasFrame(false);
     setCameraState("idle");
     setCameraMessage("Camera stopped. No frame has been uploaded or saved.");
@@ -328,7 +344,7 @@ function App() {
             <Title1>Make every frame feel more like you.</Title1>
             <Text className="hero-description">
               Explore your webcam, tune a photo, and get thoughtful creative suggestions.
-              No install. Your camera and images stay on your device.
+              No install. Try your own camera or a generated sample; images stay on your device.
             </Text>
             <div className="hero-actions">
               {cameraState === "active" ? (
@@ -343,6 +359,7 @@ function App() {
               {cameraState === "active" && (
                 <Button appearance="secondary" onClick={stopCamera}>Turn camera off</Button>
               )}
+              <Button appearance="secondary" onClick={startSample}>Try sample scene</Button>
               <span className="privacy-chip"><LockClosedRegular /> Camera access starts only when you choose</span>
             </div>
           </div>
@@ -375,13 +392,14 @@ function App() {
                   {cameraState !== "active" && (
                     <Button appearance="primary" onClick={startCamera}>Allow camera &amp; begin</Button>
                   )}
+                  <Button appearance="secondary" onClick={startSample}>Try without camera</Button>
                   {cameraState === "active" && <span className="permission-wait">Waiting for the first frame…</span>}
                 </div>
               )}
               {hasFrame && (
                 <div className="preview-overlay">
                   <Badge appearance="tint" color={captured ? "brand" : "success"}>
-                    {captured ? "CAPTURED PHOTO" : "LIVE · LOCAL"}
+                    {captured ? "CAPTURED PHOTO" : sampleMode ? "SAMPLE · GENERATED" : "LIVE · LOCAL"}
                   </Badge>
                   <span>Browser processed</span>
                 </div>
@@ -389,7 +407,7 @@ function App() {
             </div>
             <div className="preview-footer">
               <Text>{cameraMessage}</Text>
-              {captured && <Button appearance="subtle" icon={<ArrowDownloadRegular />} onClick={downloadPhoto}>Download photo</Button>}
+              {(captured || sampleMode) && hasFrame && <Button appearance="subtle" icon={<ArrowDownloadRegular />} onClick={downloadPhoto}>{sampleMode ? "Download sample" : "Download photo"}</Button>}
             </div>
             <div className="camera-note"><LockClosedRegular /> No image is uploaded, recorded, or stored by CamDoctor.</div>
           </Card>
