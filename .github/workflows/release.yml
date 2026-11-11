@@ -12,7 +12,7 @@ permissions:
 jobs:
   package:
     name: Package Windows x64
-    runs-on: windows-latest
+    runs-on: windows-2022
     env:
       QT_VERSION: 6.8.3
       QT_QPA_PLATFORM: offscreen
@@ -62,7 +62,7 @@ jobs:
     name: Publish GitHub release
     if: startsWith(github.ref, 'refs/tags/v')
     needs: package
-    runs-on: windows-latest
+    runs-on: windows-2022
     permissions:
       contents: write
     steps:
