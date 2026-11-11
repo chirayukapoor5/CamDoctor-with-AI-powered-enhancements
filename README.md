@@ -7,6 +7,8 @@ the browser's camera APIs and does not replace the native camera backend.
 
 **Repository:** [chirayukapoor5/CamDoctor-with-AI-powered-enhancements](https://github.com/chirayukapoor5/CamDoctor-with-AI-powered-enhancements)
 
+**Live browser demo:** [CamDoctor Online](https://web-eight-phi-50.vercel.app/)
+
 ## What is built
 
 ### Native Windows application
