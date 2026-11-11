@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/imageeffects.test.ts","./src/imageeffects.ts","./src/main.tsx","./src/types.ts","./api/director.test.ts","./api/director.ts","./api/groq-test.ts","./api/handler-types.ts","./api/proposal.test.ts","./api/proposal.ts","./vite.config.ts"],"version":"5.9.3"}

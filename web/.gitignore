@@ -3,6 +3,7 @@ dist/
 .vercel/
 playwright-report/
 test-results/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
